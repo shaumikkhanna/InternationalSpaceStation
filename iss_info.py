@@ -48,7 +48,7 @@ def display_data():
 	for pass_ in passes:
 	    print(f'On {pass_[1]} for a duration of {pass_[0]} seconds')
 
-	print(f'\nCurrently {crew_data['number']} people are on the ISS - ')
+	print(f"\nCurrently {crew_data['number']} people are on the ISS - ")
 	for person in crew_data['people']:
 	    print(person['name'])
 
