@@ -2,9 +2,9 @@ import requests
 import json
 import datetime
 from geocode import get_coordinates, get_location
+import sys
 
-
-ADDRESS = 'Karol Bagh' # EDIT THIS TO YOUR GENERAL LOCATION
+ADDRESS = sys.argv[1] 
 
 
 def get_data(lat, lon):
@@ -34,9 +34,9 @@ def display_data():
 	positional_data, passes_data, crew_data = get_data(*get_coordinates(ADDRESS))
 
 	long_now = float(positional_data['iss_position']['longitude'])
-	# long_now = str(abs(long_now)) + ' Degrees {}'.format('East' if long_now > 0 else 'West')
+	readable_long_now = str(abs(long_now)) + ' Degrees {}'.format('East' if long_now > 0 else 'West')
 	lat_now = float(positional_data['iss_position']['latitude'])
-	# lat_now = str(abs(lat_now)) + ' Degrees {}'.format('North' if lat_now > 0 else 'South')
+	readable_lat_now = str(abs(lat_now)) + ' Degrees {}'.format('North' if lat_now > 0 else 'South')
 
 	passes = [
 		(response['duration'], 
@@ -44,9 +44,10 @@ def display_data():
 		for response in passes_data['response']
 	]
 
-	print(f'\nThe ISS is currently at - \n{get_location(lat_now, long_now)}\n')
+	print(f'\nThe ISS is currently at - \n{readable_lat_now}\n{readable_long_now}\n'+\
+		f'Which is at {get_location(lat_now, long_now)}\n')
 
-	print(f"At the coordinates ( {passes_data['request']['latitude']}, {passes_data['request']['longitude']} ) , The ISS will pass over {passes_data['request']['passes']} times. -")
+	print(f"At the coordinates ({ passes_data['request']['latitude'] }, { passes_data['request']['longitude'] }) , The ISS will pass over { passes_data['request']['passes'] } times. -")
 	for pass_ in passes:
 	    print(f'On {pass_[1]} for a duration of {pass_[0]} seconds')
 
