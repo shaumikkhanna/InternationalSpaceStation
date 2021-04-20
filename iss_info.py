@@ -4,7 +4,7 @@ import datetime
 from geocode import get_coordinates, get_location
 
 
-ADDRESS = 'Karol Bagh'
+ADDRESS = 'Karol Bagh' # EDIT THIS TO YOUR GENERAL LOCATION
 
 
 def get_data(lat, lon):
