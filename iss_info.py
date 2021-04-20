@@ -1,16 +1,18 @@
 import requests
 import json
 import datetime
+from geocode import get_coordinates, get_location
 
 
-def get_data(lat=None, lon=None):
+ADDRESS = 'Karol Bagh'
+
+
+def get_data(lat, lon):
 	"""
 	Gets the relevant data using coord from the iss api and converts it to a dict
 	"""
-	if lat is None or lon is None:
-		coord = (28.6691,77.0929)
-	else:
-		coord = (lat, lon)
+	
+	coord = (lat, lon)
 
 	URL1 = 'http://api.open-notify.org/iss-now.json'
 	r = requests.get(URL1)
@@ -29,12 +31,12 @@ def get_data(lat=None, lon=None):
 
 
 def display_data(): 
-	positional_data, passes_data, crew_data = get_data()
+	positional_data, passes_data, crew_data = get_data(*get_coordinates(ADDRESS))
 
 	long_now = float(positional_data['iss_position']['longitude'])
-	long_now = str(abs(long_now)) + ' Degrees {}'.format('East' if long_now > 0 else 'West')
+	# long_now = str(abs(long_now)) + ' Degrees {}'.format('East' if long_now > 0 else 'West')
 	lat_now = float(positional_data['iss_position']['latitude'])
-	lat_now = str(abs(lat_now)) + ' Degrees {}'.format('North' if lat_now > 0 else 'South')
+	# lat_now = str(abs(lat_now)) + ' Degrees {}'.format('North' if lat_now > 0 else 'South')
 
 	passes = [
 		(response['duration'], 
@@ -42,7 +44,7 @@ def display_data():
 		for response in passes_data['response']
 	]
 
-	print(f'\nThe ISS is currently at - \n{lat_now}\n{long_now}\n')
+	print(f'\nThe ISS is currently at - \n{get_location(lat_now, long_now)}\n')
 
 	print(f"At the coordinates ( {passes_data['request']['latitude']}, {passes_data['request']['longitude']} ) , The ISS will pass over {passes_data['request']['passes']} times. -")
 	for pass_ in passes:
